@@ -1,7 +1,8 @@
 .App {
-  position: relative;
-  min-height: 100vh;
-  background-color: darkgrey;
+  height: 100vh;
+  background-color: #0d1116;
+  overflow: scroll;
+  text-align: center;
   
 }
 
@@ -44,18 +45,79 @@
   font-weight: bold;
   font-size: larger;
   height: 32px;
+  color: #ff6fdf;
   text-align: center;
 }
-.App-button{
+.gradient-text {
+  background: -webkit-linear-gradient(left, #60c657 30%, #35aee2 60%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.play-button {
+  background: -webkit-linear-gradient(left, #a200d6, #ff6fdf);
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+  margin-right: 15px;
   margin-top: 16px;
   padding: 8px;
-  border: 0;
-  color: white;
   height: 38px;
-  width: 100%;
-  background-color: blue;
   border-radius: 5px;
+  width: 100%;
 }
+.App-button{
+  margin-top: 32px;
+  height: 45px;
+  border: 0;
+  width: auto;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  width: 100%;
+  background: -webkit-linear-gradient(left, #a200d6, #ff6fdf);
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+}
+
+.App-loader{
+  text-align: center;
+  margin-top: 16px;
+}
+
+.sub-text {
+  font-size: 25px;
+  color: white;
+}
+
+.gradient-text {
+  background: -webkit-linear-gradient(left, #a200d6 30%, #ff6fdf 60%);
+  background-clip: text;
+  font-size: 25px;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.card-container{
+  width: 300px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  background: #0d1116;
+}
+.card{
+  width: 25rem;
+  border-radius: 1rem;
+  background: white;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15);
+  position : relative;
+  color: #434343;
+}
+
 .App-buttonContainer{
   margin: 0 auto;
 }
@@ -64,11 +126,37 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* KeyFrames */
+@-webkit-keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-moz-keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

@@ -2,13 +2,15 @@ import * as React from "react";
 import { ethers } from "ethers";
 import './App.css';
 import abi from "./utils/Random.json";
+import RingLoader from "react-spinners/RingLoader";
 
 function App() {
 
   const[currAccount,setCurrentAccount] = React.useState("");
   const[guess,setGuess] = React.useState(0);
-  const contractAddress = "0x99c0a87944d1D1bA2D93eaB4F1a09605ab83Dc96";
+  const contractAddress = "0x0A65D14ae30915eB0C2778327ef98cd39119C15d";
   const contractABI =  abi.abi;
+  const[loading, setLoading] = React.useState(false);
 
 
   const onChangeHandler = event => {
@@ -26,56 +28,90 @@ function App() {
     
   }
 
+function renderPlayAndLoad(){
+ return loading?(<RingLoader className="App-loader" color="#ff6fdf" loading={loading}  size={50} />):( <button className="App-button" onClick = {play}>
+  Play
+</button>)
+}
 
+function renderInput(){
+  return loading?( <p className = "gradient-text">
+<br/><br/>
+  Wait, The smart contract is generating a random number
+  </p>):( <form > 
+        <input className ="App-inputText"
+          type="number" placeholder = "Enter a number between 1 and 100" min="1" max="100" pattern="[0-9]+" onChange={ onChangeHandler}
+        />
+    </form>);
+}
+
+function RenderResult(){
+//  return (
+//     <div class="card-container">
+//   <div class="card">
+//     <div class="card__container">
+//         <h1 class="card__header">
+//         Lorem Ipsum
+//       </h1>
+//       <p class="card__body">
+//         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Consequat vestibulum, tortor orci tellus, consectetur lorem dui. Nisl aliquet egestas imperdiet gravida dolor amet nibh
+//       </p>  
+//     </div>
+//   </div>
+// </div>
+//   )
+}
 async function play(){
   let provider = window.ethereum;
-  if(provider){
+  try {
+    if(provider){
 
-  const connection = new ethers.providers.Web3Provider(provider);
-  const signer = connection.getSigner();
-  const RandomContract = new ethers.Contract(contractAddress, contractABI, signer);
-  RandomContract.on("Result",(game)=>{
-    console.log("event called");
-    console.log(game);
+      const connection = new ethers.providers.Web3Provider(provider);
+      const signer = connection.getSigner();
+      const RandomContract = new ethers.Contract(contractAddress, contractABI, signer);
+      RandomContract.on("Result",(game)=>{
+        console.log(game);
+        setLoading(false);
+     }
+    
+     );
 
- }
- );
-  console.log(guess);
-   const tx = await RandomContract.getRandomNumber(guess,{gasLimit:300000});
-   await tx.wait();
-
+       setLoading(true);
+       const tx = await RandomContract.getRandomNumber(guess,{gasLimit:300000});
+       await tx.wait();
+    
+      }
+  } catch (error) {
+    setLoading(false);
+    console.log(error);
   }
+  
   
 }
 
   return (
+    <div className="App">
     <div className="App-container">
       <div>
-        <div>
-          Let's play! Choose a random number between 1 and 100
-        </div>
-      <form > 
-        <input className ="App-inputText"
-          type="number" placeHolder = "Enter a number between 1 and 100" min="1" max="100" pattern="[0-9]+" onChange={ onChangeHandler}
-        />
-    </form>
+        <p className = "sub-text">
+        Let's play!<br/><br/>
+        Guess a random number between 1 and 100
+        </p>
+        {currAccount?renderInput():null}
     {
-      currAccount?(
-      <button className="App-button" onClick = {play}>
-          Play
-        </button>
-      ):(
+      currAccount?renderPlayAndLoad():(
         <button className="App-button" onClick ={connect}>
         Connect MetaMask Wallet       🦊
       </button>
       )
     }
-    
-       
-  
-   
+    {
+      RenderResult()
+    }
+
       </div>
     </div>
+    /</div>
   );
 }
 
