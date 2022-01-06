@@ -22,9 +22,28 @@ function App() {
     let provider = window.ethereum;
     if (typeof provider !== 'undefined') {
        console.log('MetaMask is installed!');
-       const accounts = await provider.request({ method: 'eth_requestAccounts' });
-       const account = accounts[0];
-       setCurrentAccount(account);
+       const chainId = await provider.request({ method: 'eth_chainId' });
+       //check is the user is on Rinkeby network
+       if(chainId === '0x4'){
+        const accounts = await provider.request({ method: 'eth_requestAccounts' });
+        const account = accounts[0];
+        setCurrentAccount(account);
+       }else{
+        try {
+          await provider.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x4'}],
+          });
+          const accounts = await provider.request({ method: 'eth_requestAccounts' });
+        const account = accounts[0];
+        setCurrentAccount(account);
+       
+      } catch (switchError) {
+         
+          console.log("Failed to switch to the network")
+        }
+       }
+       
     }
     
   }
