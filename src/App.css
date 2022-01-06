@@ -101,6 +101,24 @@
   -webkit-text-fill-color: transparent;
 }
 
+.result{
+  margin-top: 32px;
+  height: 200px;
+  border: 0;
+  width: auto;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  width: 100%;
+  background: -webkit-linear-gradient(left, #a200d6, #ff6fdf);
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+
+}
 .card-container{
   width: 300px;
   height: 200px;

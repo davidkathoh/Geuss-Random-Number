@@ -11,6 +11,7 @@ function App() {
   const contractAddress = "0x0A65D14ae30915eB0C2778327ef98cd39119C15d";
   const contractABI =  abi.abi;
   const[loading, setLoading] = React.useState(false);
+  const[result, setResult] = React.useState("");
 
 
   const onChangeHandler = event => {
@@ -28,39 +29,48 @@ function App() {
     
   }
 
-function renderPlayAndLoad(){
- return loading?(<RingLoader className="App-loader" color="#ff6fdf" loading={loading}  size={50} />):( <button className="App-button" onClick = {play}>
-  Play
-</button>)
-}
+ function replay(){
+   setResult("");
+ }
 
 function renderInput(){
-  return loading?( <p className = "gradient-text">
-<br/><br/>
-  Wait, The smart contract is generating a random number
-  </p>):( <form > 
-        <input className ="App-inputText"
-          type="number" placeholder = "Enter a number between 1 and 100" min="1" max="100" pattern="[0-9]+" onChange={ onChangeHandler}
-        />
-    </form>);
+
+  if(loading){
+      return (<div> <p className = "gradient-text">
+      <br/><br/>
+        Wait, The smart contract is generating a random number
+        </p>
+        <RingLoader className="App-loader" color="#ff6fdf" loading={loading}  size={50} />
+        </div>)
+  }else if(!loading && !result){
+  return (<div> <form > 
+    <input className ="App-inputText"
+      type="number" placeholder = "Enter a number between 1 and 100" min="1" max="100" pattern="[0-9]+" onChange={ onChangeHandler}
+    />
+</form>
+<button className="App-button" onClick = {play}>
+  Play
+</button></div>
+)
+  }
+  if(!loading && result){
+    return (<div>
+      <p className = "gradient-text">
+    <br/><br/>
+      Okay, the result is available
+      </p>
+      <button className ="result" onClick ={replay}>
+     <p>Your guess: {result.playerGuess}</p>
+     <p>Random number: {result.randomNumber}</p>
+     <p>Palayer id: {result.player}</p>
+     <p><br/> Click to guess again</p>
+   </button>
+    </div>
+      )
+  }
+
 }
 
-function RenderResult(){
-//  return (
-//     <div class="card-container">
-//   <div class="card">
-//     <div class="card__container">
-//         <h1 class="card__header">
-//         Lorem Ipsum
-//       </h1>
-//       <p class="card__body">
-//         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Consequat vestibulum, tortor orci tellus, consectetur lorem dui. Nisl aliquet egestas imperdiet gravida dolor amet nibh
-//       </p>  
-//     </div>
-//   </div>
-// </div>
-//   )
-}
 async function play(){
   let provider = window.ethereum;
   try {
@@ -70,7 +80,7 @@ async function play(){
       const signer = connection.getSigner();
       const RandomContract = new ethers.Contract(contractAddress, contractABI, signer);
       RandomContract.on("Result",(game)=>{
-        console.log(game);
+        setResult(game)
         setLoading(false);
      }
     
@@ -97,17 +107,15 @@ async function play(){
         Let's play!<br/><br/>
         Guess a random number between 1 and 100
         </p>
-        {currAccount?renderInput():null}
+       
     {
-      currAccount?renderPlayAndLoad():(
+      currAccount?renderInput():(
         <button className="App-button" onClick ={connect}>
         Connect MetaMask Wallet       🦊
       </button>
       )
     }
-    {
-      RenderResult()
-    }
+    
 
       </div>
     </div>
